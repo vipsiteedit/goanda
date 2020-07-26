@@ -115,12 +115,16 @@ type InstrumentPricing struct {
 
 // Получить свечи
 func (c *OandaConnection) GetCandles(instrument string, req RequestCandle) InstrumentHistory {
-	if granularity == "" {
-		granularity = "S5"
-	}
+
 	params := "?count=" + fmt.Sprint(req.Count)
 	if isGranularity(req.Granularity) {
 		params += "&granularity=" + req.Granularity
+	}
+	if req.From != nil {
+		params += "&from=" + req.From.Format("2006-01-02 15:04:05")
+	}
+	if req.To != nil {
+		params += "&from=" + req.To.Format("2006-01-02 15:04:05")
 	}
 
 	endpoint := "/instruments/" + instrument + "/candles" + params
