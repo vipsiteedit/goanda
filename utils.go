@@ -3,9 +3,11 @@ package goanda
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"reflect"
 	"strings"
 )
 
@@ -49,4 +51,23 @@ func makeRequest(c *OandaConnection, endpoint string, client http.Client, req *h
 	checkErr(readErr)
 	checkApiErr(body, endpoint)
 	return body
+}
+
+func InArrayBool(val interface{}, array interface{}) bool {
+	exists := false
+	switch reflect.TypeOf(array).Kind() {
+	case reflect.Slice:
+		s := reflect.ValueOf(array)
+		for i := 0; i < s.Len(); i++ {
+			if reflect.DeepEqual(val, s.Index(i).Interface()) == true {
+				fmt.Println("SLICE:", val)
+			}
+			if reflect.DeepEqual(val, s.Index(i).Interface()) == true {
+				exists = true
+				//		return exists
+			}
+		}
+	}
+
+	return exists
 }

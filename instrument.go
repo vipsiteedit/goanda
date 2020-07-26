@@ -3,8 +3,18 @@ package goanda
 // Supporting OANDA docs - http://developer.oanda.com/rest-live-v20/instrument-ep/
 
 import (
+	"fmt"
 	"time"
 )
+
+type RequestCandle struct {
+	Granularity  string     `json:"granularity"`
+	Count        int        `json:"count"`
+	From         *time.Time `json:"from"`
+	To           *time.Time `json:"to"`
+	Smooth       bool       `json:"smooth"`
+	IncludeFirst bool       `json:"includeFirst" default:"true"`
+}
 
 type Candle struct {
 	Open  float64 `json:"o,string"`
@@ -103,8 +113,18 @@ type InstrumentPricing struct {
 	} `json:"prices"`
 }
 
-func (c *OandaConnection) GetCandles(instrument string, count string, granularity string) InstrumentHistory {
-	endpoint := "/instruments/" + instrument + "/candles?count=" + count + "&granularity=" + granularity
+// Получить свечи
+func (c *OandaConnection) GetCandles(instrument string, req RequestCandle) InstrumentHistory {
+	if granularity == "" {
+		granularity = "S5"
+	}
+	params := "?count=" + fmt.Sprint(req.Count)
+	if isGranularity(req.Granularity) {
+		params += "&granularity=" + req.Granularity
+	}
+
+
+	endpoint := "/instruments/" + instrument + "/candles" + params
 	candles := c.Request(endpoint)
 	data := InstrumentHistory{}
 	unmarshalJson(candles, &data)
@@ -146,4 +166,11 @@ func (c *OandaConnection) GetInstrumentPrice(instrument string) InstrumentPricin
 	unmarshalJson(pricing, &data)
 
 	return data
+}
+
+func isGranularity(gr string) bool {
+	var gran []string{
+		"S5", "S10", "S15", "S30","M1", "M2", "M5", "M10", "M15", "M30", "H1", "H2", "H3", "H4", "H6", "H8", "H12", "D", "W", "M"
+	}
+	return InArrayBool(gr, gran)
 }
