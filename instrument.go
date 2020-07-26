@@ -117,14 +117,14 @@ type InstrumentPricing struct {
 func (c *OandaConnection) GetCandles(instrument string, req RequestCandle) InstrumentHistory {
 
 	params := "?count=" + fmt.Sprint(req.Count)
-	if isGranularity(req.Granularity) {
-		params += "&granularity=" + req.Granularity
-	}
 	if req.From != nil {
-		params += "&from=" + fmt.Sprint(req.From.Unix())
+		params = "?from=" + fmt.Sprint(req.From.Unix())
 	}
 	if req.To != nil {
 		params += "&to=" + fmt.Sprint(req.To.Unix())
+	}
+	if isGranularity(req.Granularity) {
+		params += "&granularity=" + req.Granularity
 	}
 
 	endpoint := "/instruments/" + instrument + "/candles" + params
