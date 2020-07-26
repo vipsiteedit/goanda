@@ -121,10 +121,10 @@ func (c *OandaConnection) GetCandles(instrument string, req RequestCandle) Instr
 		params += "&granularity=" + req.Granularity
 	}
 	if req.From != nil {
-		params += "&from=" + req.From.Unix()
+		params += "&from=" + fmt.Sprint(req.From.Unix())
 	}
 	if req.To != nil {
-		params += "&to=" + req.To.Unix()
+		params += "&to=" + fmt.Sprint(req.To.Unix())
 	}
 
 	endpoint := "/instruments/" + instrument + "/candles" + params
