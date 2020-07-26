@@ -122,13 +122,13 @@ func (c *OandaConnection) GetCandles(instrument string, req RequestCandle) Instr
 		params += "&granularity=" + req.Granularity
 	}
 	if req.From != nil {
-		params += "&from=" + req.From.Format("2006-01-02 15:04:05")
+		params += "&from=" + url.QueryEscape(req.From.Format("2006-01-02 15:04:05"))
 	}
 	if req.To != nil {
-		params += "&to=" + req.To.Format("2006-01-02 15:04:05")
+		params += "&to=" + url.QueryEscape(req.To.Format("2006-01-02 15:04:05"))
 	}
 
-	endpoint := "/instruments/" + instrument + "/candles" + url.QueryEscape(params)
+	endpoint := "/instruments/" + instrument + "/candles" + params
 	candles := c.Request(endpoint)
 	data := InstrumentHistory{}
 	unmarshalJson(candles, &data)
