@@ -123,7 +123,6 @@ func (c *OandaConnection) GetCandles(instrument string, req RequestCandle) Instr
 		params += "&granularity=" + req.Granularity
 	}
 
-
 	endpoint := "/instruments/" + instrument + "/candles" + params
 	candles := c.Request(endpoint)
 	data := InstrumentHistory{}
@@ -170,7 +169,7 @@ func (c *OandaConnection) GetInstrumentPrice(instrument string) InstrumentPricin
 
 func isGranularity(gr string) bool {
 	gran := []string{
-		"S5", "S10", "S15", "S30","M1", "M2", "M5", "M10", "M15", "M30", "H1", "H2", "H3", "H4", "H6", "H8", "H12", "D", "W", "M"
+		"S5", "S10", "S15", "S30", "M1", "M2", "M5", "M10", "M15", "M30", "H1", "H2", "H3", "H4", "H6", "H8", "H12", "D", "W", "M",
 	}
 	return InArrayBool(gr, gran)
 }
