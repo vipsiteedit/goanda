@@ -4,6 +4,7 @@ package goanda
 
 import (
 	"fmt"
+	"net/url"
 	"time"
 )
 
@@ -124,10 +125,10 @@ func (c *OandaConnection) GetCandles(instrument string, req RequestCandle) Instr
 		params += "&from=" + req.From.Format("2006-01-02 15:04:05")
 	}
 	if req.To != nil {
-		params += "&from=" + req.To.Format("2006-01-02 15:04:05")
+		params += "&to=" + req.To.Format("2006-01-02 15:04:05")
 	}
 
-	endpoint := "/instruments/" + instrument + "/candles" + params
+	endpoint := "/instruments/" + instrument + "/candles" + url.QueryEscape(params)
 	candles := c.Request(endpoint)
 	data := InstrumentHistory{}
 	unmarshalJson(candles, &data)
